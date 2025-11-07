@@ -11,13 +11,14 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
  */
 export const sendInput = async (messageData) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/chat`, {
+        console.log(messageData);
+        const response = await fetch(`${API_BASE_URL}/hubspot_agent`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                messages: Array.isArray(messageData) ? messageData : [messageData],
+                message: messageData,
             }),
         });
 
@@ -26,7 +27,14 @@ export const sendInput = async (messageData) => {
         }
 
         const data = await response.json();
-        return data;
+
+        // Transform backend response to match MessageStream format
+        // Backend returns: {"message": "..."}
+        // We need: {"content": "...", "role": "agent"}
+        return {
+            content: data.message || data.content || "",
+            role: 'agent'
+        };
     } catch (error) {
         console.error('Error sending message:', error);
         throw error;

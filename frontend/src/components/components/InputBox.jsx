@@ -23,7 +23,6 @@ const InputBox = ({ onMessageSent, onResponseReceived }) => {
     const sendMessage = async () => {
         if (!input.trim() || isLoading) return;
 
-        const messageToSend = input.trim();
         setInput("");
         setIsLoading(true);
 
@@ -31,12 +30,12 @@ const InputBox = ({ onMessageSent, onResponseReceived }) => {
         if (onMessageSent) {
             onMessageSent({
                 role: 'user',
-                content: messageToSend
+                content: input
             });
         }
 
         try {
-            const response = await test(messageToSend);
+            const response = await sendInput(input);
             console.log('Response from backend:', response);
 
             // Handle the response
@@ -46,25 +45,6 @@ const InputBox = ({ onMessageSent, onResponseReceived }) => {
                     onResponseReceived({
                         role: 'agent',
                         content: response.content || response.answer
-                    });
-                }
-                // If response is an array of messages
-                else if (Array.isArray(response)) {
-                    response.forEach(msg => {
-                        if (msg.role && msg.content) {
-                            onResponseReceived(msg);
-                        }
-                    });
-                }
-                // If response has nested structure
-                else if (typeof response === 'object') {
-                    Object.entries(response).forEach(([key, value]) => {
-                        if (key === 'answer' || (value && value.role && value.content)) {
-                            onResponseReceived({
-                                role: 'agent',
-                                content: typeof value === 'string' ? value : value.content
-                            });
-                        }
                     });
                 }
             }
@@ -95,8 +75,8 @@ const InputBox = ({ onMessageSent, onResponseReceived }) => {
                 <CardContent className="flex flex-col p-0 gap-2">
                     <div className="flex flex-row">
                         <Textarea
-                            className="w-full mt-1 shadow-none bg-transparent resize-none outline-none ring-0 border-0 focus:ring-0 focus:border-0 focus-visible:ring-0 focus-visible:border-0"
-                            placeholder="Use your CRM..."
+                            className="w-full text-xl mt-1 shadow-none bg-transparent resize-none outline-none ring-0 border-0 focus:ring-0 focus:border-0 focus-visible:ring-0 focus-visible:border-0"
+                            placeholder="Use your sales stack..."
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={handleKeyDown}
