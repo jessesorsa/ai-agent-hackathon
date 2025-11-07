@@ -1,0 +1,23 @@
+## Problems
+
+- Meetings
+    - Pulling data before a meeting takes time from different apps
+- Product
+    - Getting product data from different systems takes time
+    - Product Requirements Document creation for new features
+- Founder led sales / sales
+    - Just using and managing many tools is slow (you usually just want to do some one thing in a single app)
+    - It's slow to research a company to find out if it fits our company ICP (finding really really good fits)
+    - It's slow to manually search for people from ICP companies
+    - Adding company, deal, contact info to CRMs (Notion for early stage is annoying manual process)
+    - Updating object info in CRMs is annoying
+    - UIs of many CRMs are horrible to use
+    - Writing emails by hand wastes time
+- Data analysis
+    - Static data-analysis tools are not flexible enough
+    - Non technical people have to use ready built tools (restricting)
+    - Technical people have to write SQL (they already copy it from gpt)
+    - Dashboards that are pretty (to show in meetings etc.) are not easy to do for hardcore data-analysts
+- General
+    - Chat UI for agents is very restricting (wall of text)
+    - All applications use static complicated UIs which are annoying and super time consuming to use
