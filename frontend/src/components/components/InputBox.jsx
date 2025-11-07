@@ -1,77 +1,112 @@
 'use client'
 
 import { useState } from 'react'
+import { ArrowUp } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import {
     Card,
     CardContent,
 } from "@/components/ui/card"
-//import { test, sendInput } from '@/http/http'
+import { sendInput, test } from '@/http/http'
 
-const InputBox = () => {
+/**
+ * InputBox component for sending messages
+ * @param {Object} props
+ * @param {Function} props.onMessageSent - Callback function called when a message is sent
+ * @param {Function} props.onResponseReceived - Callback function called when a response is received
+ */
+const InputBox = ({ onMessageSent, onResponseReceived }) => {
     const [input, setInput] = useState("");
-
-    /*
-    const dispatch = useDispatch();
-    const messages = useSelector((state) => state.chat.messages);
-    const last_5_messages = useSelector((state) => selectLastMessages(state, 0));
+    const [isLoading, setIsLoading] = useState(false);
 
     const sendMessage = async () => {
-        dispatch(addMessage({
-            role: 'user',
-            content: input,
-        }))
+        if (!input.trim() || isLoading) return;
 
-        const messageStream = [...last_5_messages, input];
+        const messageToSend = input.trim();
         setInput("");
-        const data = await sendInput(messageStream);
+        setIsLoading(true);
 
-        if (data && data.role && data.content) {
-            dispatch(addMessage(data));
-            return;
+        // Add user message to stream
+        if (onMessageSent) {
+            onMessageSent({
+                role: 'user',
+                content: messageToSend
+            });
         }
 
-        const outputs = [];
+        try {
+            const response = await test(messageToSend);
+            console.log('Response from backend:', response);
 
-        for (const [key, value] of Object.entries(data)) {
-            if (key === 'answer') {
-                outputs.push({
-                    role: 'assistant',
-                    content: value
-                });
-            } else if (value.role && value.content) {
-                outputs.push({
-                    role: value.role,
-                    content: value.content
+            // Handle the response
+            if (onResponseReceived) {
+                // If response has a direct content/answer field
+                if (response.content || response.answer) {
+                    onResponseReceived({
+                        role: 'agent',
+                        content: response.content || response.answer
+                    });
+                }
+                // If response is an array of messages
+                else if (Array.isArray(response)) {
+                    response.forEach(msg => {
+                        if (msg.role && msg.content) {
+                            onResponseReceived(msg);
+                        }
+                    });
+                }
+                // If response has nested structure
+                else if (typeof response === 'object') {
+                    Object.entries(response).forEach(([key, value]) => {
+                        if (key === 'answer' || (value && value.role && value.content)) {
+                            onResponseReceived({
+                                role: 'agent',
+                                content: typeof value === 'string' ? value : value.content
+                            });
+                        }
+                    });
+                }
+            }
+        } catch (error) {
+            console.error('Failed to send message:', error);
+            // Optionally add error message to stream
+            if (onResponseReceived) {
+                onResponseReceived({
+                    role: 'agent',
+                    content: 'Sorry, there was an error processing your request.'
                 });
             }
+        } finally {
+            setIsLoading(false);
         }
+    };
 
-        for (const message of outputs) {
-            dispatch(addMessage(message));
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
         }
-        */
-
-    const sendMessage = () => {
-        // TODO: Implement sendMessage functionality
     };
 
     return (
-        <div className="fixed bottom-4 left-0 right-0 z-10 flex justify-center px-">
-            <Card className="flex p-2 w-full max-w-2xl mx-auto bg-neutral-600">
+        <div className="fixed bottom-4 left-0 right-0 z-10 flex justify-center px-4">
+            <Card className="flex p-2 w-2xl rounded-3xl bg-neutral-100/70 backdrop-blur-sm shadow-xl">
                 <CardContent className="flex flex-col p-0 gap-2">
                     <div className="flex flex-row">
                         <Textarea
-                            className="text-md w-full h-20 shadow-none resize-none outline-none ring-0 border-0 focus:ring-0 focus:border-0 focus-visible:ring-0 focus-visible:border-0"
-                            placeholder="Chat with your database"
+                            className="w-full mt-1 shadow-none bg-transparent resize-none outline-none ring-0 border-0 focus:ring-0 focus:border-0 focus-visible:ring-0 focus-visible:border-0"
+                            placeholder="Use your CRM..."
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            disabled={isLoading}
                         />
                         <Button
-                            className="rounded-full"
+                            size="icon"
+                            className="rounded-full bg-black"
                             onClick={sendMessage}>
-                            Send
+                            <ArrowUp className="w-6 h-6" />
                         </Button>
                     </div>
                 </CardContent>
