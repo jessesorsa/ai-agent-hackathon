@@ -11,6 +11,7 @@ Build an AI-powered sales assistant that automates repetitive sales workflows th
 This is a hackathon project. The repo contains a Next.js frontend (`/frontend`) and a Python backend (`/backend/main.py`). The goal is to ship a working AI sales assistant that orchestrates multiple specialized agents to streamline the sales process—from lead discovery to meeting follow-ups.
 
 Why this matters:
+
 - Founders and sales teams waste hours on manual CRM updates, research, and email drafting
 - Demonstrates real-world multi-agent orchestration solving actual business pain
 - Shows practical LLM integration with external tools (CRM, Gmail, web search, Notion)
@@ -18,30 +19,34 @@ Why this matters:
 
 ## Goals (success criteria)
 
-- MVP should demonstrate lead discovery → CRM creation → email drafting in one flow
-- Demo should show agents working together (web search → CRM → Gmail)
+- MVP should demonstrate lead discovery → HubSpot CRM creation → email drafting in one flow
+- Demo should show agents working together (web search → HubSpot → Gmail)
 - UI should clearly show agent reasoning and handoffs between agents
 - For hackathon judging: produce a clear demo showing time savings vs manual process
 
 Success metrics (measurable):
+
 - End-to-end lead qualification flow working: PASS/FAIL
-- Time to research company + add to CRM + draft email < 2 minutes
-- At least 3 agents working in orchestration (Web Search, CRM, Gmail)
+- Time to research company + add to HubSpot CRM + draft email < 2 minutes
+- At least 3 agents working in orchestration (Web Search, HubSpot CRM, Gmail)
 - ICP fit assessment accuracy > 80%
 
 ## Target users & personas
 
 Primary user: Founders doing founder-led sales
+
 - Limited time, needs to qualify leads quickly
 - Manually juggling CRM, email, research tools
 - Wants to focus on selling, not admin work
 
 Secondary user: Early-stage sales teams / SDRs
+
 - High volume of lead qualification needed
 - Spending too much time on manual data entry
 - Need to personalize outreach at scale
 
 Personas:
+
 - Alex, Startup Founder: Needs to qualify 20 leads/week, currently takes 30min each
 - Sarah, SDR: Needs to send 50 personalized emails/day, currently spends 3 hours on research and drafting
 
@@ -58,41 +63,57 @@ Personas:
 ### Core Agents (MVP):
 
 **Web Search Agent**
+
 - Search company information (size, industry, funding, tech stack)
 - Find decision-maker names and roles
-- Assess ICP fit based on criteria from Notion
+- Assess ICP fit based on criteria from Notion (internal company docs)
 - Extract recent company news
 
-**CRM Agent**
-- Create company records
-- Create contact records
-- Update existing records
-- Search for records
-- Add notes to records
+**HubSpot CRM Agent**
+
+- Create company records in HubSpot
+- Create contact records in HubSpot
+- Update existing records in HubSpot
+- Search for records in HubSpot
+- Add notes to HubSpot records
 
 **Gmail Agent**
+**Gmail Agent**
+
 - Draft personalized outreach emails
-- Use CRM context (company info, deal stage)
+- Use HubSpot CRM context (company info, deal stage)
 - Adapt tone based on sales stage
 
 **Notion Agent**
-- Fetch ICP criteria document
-- Retrieve product information
+
+- Fetch ICP criteria document and other internal company documents
+- Retrieve product information and internal playbooks stored in Notion
+
+### Agent Robustness & Expectations
+
+- Agents must be robust and resilient, not fragile or brittle. They should handle deviations from the happy-path and recover gracefully.
+- Agents should behave like human employees: ask clarifying questions when intent is ambiguous, take corrective actions when external APIs fail, and log clear reasoning steps for UI display.
+- Agents must support multi-turn interactions and flexible workflows (not hardcoded single-step flows). They should be able to resume tasks after interruptions and handle retries/backoff for transient errors.
+- Success criteria for agent behavior: clear, actionable explanations for decisions; deterministic structured outputs for orchestration; and graceful degradation to mock/fallback data when external services are unavailable.
 
 **Orchestrator**
+
 - Coordinate agent handoffs
 - Maintain context between agents
 - Handle error recovery and retries
+- Support dynamic plans: alter the execution plan at runtime based on agent outputs (e.g., skip/create additional steps) so flows behave more like a human team would.
 
 ### UI Features (MVP):
+
 - Natural language input for tasks
 - Agent activity visualizer (which agent is working)
 - Step-by-step execution display with agent reasoning
-- Structured output for CRM data (cards/tables)
-- Confirmation prompts before writing to CRM
+- Structured output for HubSpot CRM data (cards/tables)
+- Confirmation prompts before writing to HubSpot CRM
 - Export/copy draft emails
 
 ### Stretch / nice-to-have (if time permits):
+
 - Meeting transcription agent
 - Bulk lead processing (CSV upload)
 - Email send integration (vs just drafting)
@@ -102,7 +123,7 @@ Personas:
 
 ### Flow 1: Lead Discovery & Qualification (Primary Demo Flow)
 
-**User Intent**: "Research Stripe and tell me if they fit our ICP, then add them to CRM"
+**User Intent**: "Research Stripe and tell me if they fit our ICP, then add them to HubSpot CRM"
 
 1. User opens app and enters task in natural language
 2. Frontend sends to backend: `POST /api/task { intent: "Research Stripe..." }`
@@ -110,7 +131,7 @@ Personas:
    - Step 1: Web Search Agent researches Stripe
    - Step 2: Notion Agent fetches ICP criteria
    - Step 3: Web Search Agent scores ICP fit
-   - Step 4: CRM Agent creates company record
+   - Step 4: HubSpot CRM Agent creates company record
 4. UI displays plan with agent assignments
 5. User confirms plan execution
 6. **Web Search Agent** executes:
@@ -125,11 +146,12 @@ Personas:
    - UI shows: "Assessing ICP fit..."
    - Returns: "Poor fit - company too large (8000 vs target 50-2000)"
    - ICP Score: 3/10
-9. System asks: "Company doesn't match ICP. Add to CRM anyway?"
+9. System asks: "Company doesn't match ICP. Add to HubSpot CRM anyway?"
 10. User can:
-    - Approve → CRM Agent creates record
-    - Skip → End flow
-    - Modify ICP criteria → Rescore
+
+- Approve → HubSpot CRM Agent creates record
+- Skip → End flow
+- Modify ICP criteria → Rescore
 
 ### Flow 2: Pre-Meeting Preparation
 
@@ -137,11 +159,11 @@ Personas:
 
 1. User enters task
 2. **Orchestrator** creates plan:
-   - Step 1: CRM Agent retrieves Acme Corp record
+   - Step 1: HubSpot CRM Agent retrieves Acme Corp record
    - Step 2: Web Search Agent finds recent news
    - Step 3: Orchestrator compiles meeting brief
-3. **CRM Agent** executes:
-   - Searches CRM for "Acme Corp"
+3. **HubSpot CRM Agent** executes:
+   - Searches HubSpot for "Acme Corp"
    - Returns: company data, deal status, contact info, previous notes
 4. **Web Search Agent** executes:
    - Searches for recent Acme Corp news
@@ -161,11 +183,11 @@ Personas:
 
 1. User enters task
 2. **Orchestrator** creates plan:
-   - Step 1: CRM Agent looks up contact
-   - Step 2: CRM Agent gets recent interactions
+   - Step 1: HubSpot CRM Agent looks up contact
+   - Step 2: HubSpot CRM Agent gets recent interactions
    - Step 3: Gmail Agent drafts email
-3. **CRM Agent** executes:
-   - Searches for john@acme.com
+3. **HubSpot CRM Agent** executes:
+   - Searches HubSpot for john@acme.com
    - Returns: John Smith, CTO at Acme Corp, last contacted 2 weeks ago
    - Retrieves: last meeting notes, deal stage (Demo Scheduled)
 4. **Gmail Agent** executes:
@@ -183,13 +205,14 @@ Personas:
 **User Intent**: "What's the status of the Acme Corp deal?"
 
 1. User enters question
-2. **CRM Agent** executes:
-   - Searches for Acme Corp deal
+2. **HubSpot CRM Agent** executes:
+   - Searches HubSpot for Acme Corp deal
    - Returns: Deal stage, amount, last activity, next steps
 3. UI displays structured card with deal info
 4. Fast response (< 5 seconds)
 
 ### Edge Flows:
+
 - **Rate limit**: Agent shows error, auto-retries with exponential backoff
 - **Not found in CRM**: Agent offers to search web instead
 - **Ambiguous query**: Agent asks clarifying question
@@ -198,6 +221,7 @@ Personas:
 ## UI Screens (textual wireframes)
 
 ### Main Screen
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │ AI Sales Assistant                          [⚙️]    │
@@ -216,13 +240,14 @@ Personas:
 ├─────────────────────────────────────────────────────┤
 │  Agent Activity                                      │
 │  ● Web Search Agent - Idle                          │
-│  ● CRM Agent - Idle                                  │
+│  ● HubSpot CRM Agent - Idle                           │
 │  ● Gmail Agent - Idle                                │
 │  ● Notion Agent - Idle                               │
 └─────────────────────────────────────────────────────┘
 ```
 
 ### Execution Screen (during task)
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │ Task: Research Stripe and assess ICP fit            │
@@ -239,7 +264,7 @@ Personas:
 │ 🔄 3. Web Search - Assess ICP fit                   │
 │    Analyzing fit...                                  │
 │                                                      │
-│ ⏳ 4. CRM - Create company record                   │
+│ ⏳ 4. HubSpot CRM - Create company record            │
 │    Waiting...                                        │
 │                                                      │
 ├─────────────────────────────────────────────────────┤
@@ -249,6 +274,7 @@ Personas:
 ```
 
 ### Results Screen
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │ Results: Stripe ICP Assessment               [✕]    │
@@ -269,11 +295,12 @@ Personas:
 │  ✅ Industry (fintech) matches                      │
 │  ❌ Likely has enterprise sales team already        │
 │                                                      │
-│  [Skip] [Add to CRM Anyway] [Adjust ICP Criteria]   │
+│  [Skip] [Add to HubSpot CRM Anyway] [Adjust ICP Criteria]   │
 └─────────────────────────────────────────────────────┘
 ```
 
 ### Email Draft Screen
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │ Draft Email: Follow-up to John Smith         [✕]    │
@@ -308,6 +335,7 @@ Personas:
 ### Core Endpoints
 
 **POST /api/task**
+
 ```json
 Request:
 {
@@ -334,6 +362,7 @@ Response:
 ```
 
 **GET /api/task/{taskId}/status**
+
 ```json
 Response:
 {
@@ -346,6 +375,7 @@ Response:
 ```
 
 **WebSocket /ws/task/{taskId}**
+
 ```json
 Real-time updates:
 {
@@ -360,6 +390,7 @@ Real-time updates:
 ### Agent-Specific Endpoints
 
 **POST /api/agents/web_search/research**
+
 ```json
 Request:
 {
@@ -377,24 +408,26 @@ Response:
 }
 ```
 
-**POST /api/agents/crm/create_company**
+**POST /api/agents/hubspot/create_company**
+
 ```json
 Request:
 {
-  "name": "Stripe",
-  "size": "8000+",
-  "industry": "Fintech",
-  "confirmed": true
+   "name": "Stripe",
+   "size": "8000+",
+   "industry": "Fintech",
+   "confirmed": true
 }
 
 Response:
 {
-  "id": "company-456",
-  "url": "notion.so/company-456"
+   "id": "company-456",
+   "url": "https://app.hubspot.com/companies/company-456"
 }
 ```
 
 **POST /api/agents/gmail/draft**
+
 ```json
 Request:
 {
@@ -420,29 +453,33 @@ Auth: Session-based for MVP (no OAuth needed for demo)
 ### Must-Have for MVP Demo:
 
 1. **Lead Discovery Flow Works End-to-End**
+
    - User can input "Research [Company] and assess ICP fit"
    - Web Search Agent researches company info
    - Notion Agent fetches ICP criteria
    - System provides ICP fit score with reasoning
-   - User can confirm to add to CRM
-   - CRM Agent creates company record
+     - User can confirm to add to HubSpot CRM
+     - HubSpot CRM Agent creates company record
 
 2. **Agent Orchestration Visible**
+
    - UI shows which agent is currently executing
    - Plan displays before execution with agent assignments
    - Step-by-step status updates (pending → running → complete/failed)
    - Agent reasoning displayed for each step
 
 3. **Email Drafting Works**
+
    - User can request email draft for a contact
-   - CRM Agent retrieves contact context
+   - HubSpot CRM Agent retrieves contact context
    - Gmail Agent generates personalized draft
    - User can copy draft
 
 4. **Real Integrations (at least 2 of 3)**
+
    - Web search using real API (SerpAPI/Bing/Perplexity)
    - Notion API for ICP criteria OR mock with realistic data
-   - Notion CRM OR simple database for company records
+   - HubSpot API for CRM OR simple database for company records
 
 5. **Demo Completes in < 2 Minutes**
    - Full lead discovery flow runs in under 2 minutes
@@ -459,34 +496,41 @@ Auth: Session-based for MVP (no OAuth needed for demo)
 ## Tech Stack
 
 ### Frontend
+
 - **Framework**: Next.js 14+ (existing `/frontend`)
 - **UI Components**: Tailwind CSS + shadcn/ui for clean, modern UI
 - **Real-time**: WebSocket client for live agent updates
 - **State Management**: React Context or Zustand for agent status
 
-### Backend
+-### Backend
+
 - **Framework**: FastAPI (Python, existing `/backend/main.py`)
 - **LLM Orchestration**: LangGraph or custom orchestrator
 - **LLM**: OpenAI GPT-4 (function calling for agent routing)
 - **WebSockets**: FastAPI WebSocket for real-time updates
+- **Tool calling / Service bus**: Composio for external tool calls; agents should invoke external services via Composio using MCPs (Model-Context Protocols) for standardized tool interfaces, auth, and retries.
 
 ### Agent Integrations
-- **Web Search**: Perplexity API or SerpAPI (easiest for hackathon)
-- **CRM**: Notion API (database for companies/contacts) OR simple SQLite
-- **Email**: Mock Gmail Agent (no real sending needed for MVP)
-- **Notion**: Notion API for fetching ICP documents
+
+- **Web Search**: Perplexity API or SerpAPI (easiest for hackathon). Web search calls should be proxied through Composio MCPs where possible to centralize rate-limiting, caching, and credentials.
+- **CRM**: HubSpot CRM API (preferred for demo) — integrate via Composio MCPs for consistent authentication, retries, and observability. Fallback to simple SQLite or in-memory mocks for local demos.
+- **Email**: Mock Gmail Agent (no real sending needed for MVP). Any send or mailbox interactions should be routed through Composio MCPs to centralize permissions and auditing.
+- **Notion**: Notion API for fetching ICP documents and internal playbooks — access via Composio MCPs where feasible, with direct Notion API fallback for development convenience.
 
 ### Storage
+
 - **MVP**: In-memory with Python dictionaries
 - **If needed**: SQLite for persistence
 - **Not needed**: Redis, PostgreSQL (overkill for hackathon)
 
 ### Development
+
 - **Local Development**: `npm run dev` for frontend, `uvicorn` for backend
 - **No Docker**: Run directly for faster iteration
 - **Environment**: `.env` file for API keys
 
 ### Key Libraries
+
 ```python
 # Backend
 fastapi
@@ -495,6 +539,8 @@ openai
 notion-client
 requests (for web search APIs)
 websockets
+hubspot-api-client
+composio-client
 ```
 
 ```typescript
@@ -504,27 +550,47 @@ tailwindcss
 socket.io-client or native WebSocket
 ```
 
+### Tool calling via Composio & MCPs
+
+- All external tool calls (HubSpot, Notion, Web Search, any 3rd-party APIs) should be routed through Composio using Model-Context Protocols (MCPs). MCPs provide a small, well-documented contract for each tool: inputs, outputs, auth, and error conditions.
+- Benefits of using Composio + MCPs:
+  - Centralized auth and credential management (store API keys in one place)
+  - Standardized retry/backoff, rate-limit handling, and caching
+  - Consistent observability and audit trails for agent tool calls
+  - Simplified local mocking and demo fallbacks (swap MCP endpoints to in-memory/mocked handlers)
+- Agent design expectations when using Composio:
+  - Agents call MCP endpoints (via composio-client) rather than calling third-party APIs directly.
+  - Agents should validate MCP contracts and handle structured error responses (e.g., transient vs permanent errors).
+  - Orchestrator can modify the MCP execution plan at runtime (switch to fallback MCP when a primary service is unavailable).
+- For the hackathon MVP the implementation approach is:
+  - Implement composio-client wrappers for HubSpot and Notion MCPs (small adapter layer).
+  - Provide a local in-memory MCP server or mock handlers for offline/demo mode.
+  - Keep direct-API fallbacks only for early development; production demo flows should exercise Composio paths.
+
 ## Risks & Mitigations
 
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| API rate limits during demo | High | Cache responses, use mock data as fallback |
-| LLM returns inconsistent plan | Medium | Structured output with JSON schema, retry logic |
-| Web search returns poor data | Medium | Hardcode fallback data for demo companies (Stripe, Notion) |
-| Agent handoff failures | High | Extensive testing of orchestrator, clear error messages |
-| Demo too slow (>2 min) | High | Optimize API calls, parallel execution where possible |
-| Notion API setup complexity | Medium | Use SQLite as simpler alternative for CRM |
-| Real-time updates lag | Low | Polling fallback if WebSocket fails |
+| Risk                          | Impact | Mitigation                                                 |
+| ----------------------------- | ------ | ---------------------------------------------------------- |
+| API rate limits during demo   | High   | Cache responses, use mock data as fallback                 |
+| LLM returns inconsistent plan | Medium | Structured output with JSON schema, retry logic            |
+| Web search returns poor data  | Medium | Hardcode fallback data for demo companies (Stripe, Notion) |
+| Agent handoff failures        | High   | Extensive testing of orchestrator, clear error messages    |
+| Demo too slow (>2 min)        | High   | Optimize API calls, parallel execution where possible      |
+| HubSpot API setup complexity  | Medium | Use SQLite or simple in-memory DB as a fallback for demos  |
+| Real-time updates lag         | Low    | Polling fallback if WebSocket fails                        |
 
 ## Testing Strategy
 
 ### Manual Testing (Priority)
+
 1. **End-to-end demo script** (must work 100%):
-   - "Research Stripe and assess ICP fit, then add to CRM"
+
+   - "Research Stripe and assess ICP fit, then add to HubSpot CRM"
    - "Draft follow-up email to john@stripe.com"
    - "What's the status of the Stripe deal?"
 
 2. **Edge cases to test**:
+
    - Company not found by web search
    - Bad ICP fit score
    - Contact not in CRM
@@ -535,11 +601,13 @@ socket.io-client or native WebSocket
    - Optimize if > 2 minutes
 
 ### Automated Testing (Nice-to-have)
+
 - Unit tests for agent tool functions
 - Schema validation for API responses
 - Not critical for hackathon demo
 
 ### Pre-Demo Checklist
+
 - [ ] Run full demo 3 times successfully
 - [ ] Record backup demo video
 - [ ] Test on fresh browser (clear cache)
@@ -549,14 +617,17 @@ socket.io-client or native WebSocket
 ## Implementation Timeline (Hackathon - 48 hours)
 
 ### Phase 1: Foundation (Hours 0-8)
+
 **Backend**
+
 - [ ] Set up FastAPI with WebSocket support
 - [ ] Create basic orchestrator (route intent → agents)
 - [ ] Implement Web Search Agent (Perplexity/SerpAPI)
-- [ ] Implement mock CRM Agent (in-memory)
+- [ ] Implement mock HubSpot CRM Agent (in-memory)
 - [ ] Create task execution engine
 
 **Frontend**
+
 - [ ] Set up main UI with input box
 - [ ] Create agent status display component
 - [ ] Build step-by-step execution viewer
@@ -565,14 +636,17 @@ socket.io-client or native WebSocket
 **Milestone**: Can submit task and see agents execute
 
 ### Phase 2: Core Flows (Hours 8-24)
+
 **Backend**
+
 - [ ] Build ICP assessment logic
 - [ ] Add Notion Agent (fetch ICP criteria)
 - [ ] Implement Gmail Agent (email drafting)
-- [ ] Add CRM search and create functions
+- [ ] Add HubSpot search and create functions
 - [ ] Refine orchestrator for multi-agent flows
 
 **Frontend**
+
 - [ ] Build ICP assessment results card
 - [ ] Create email draft viewer with copy button
 - [ ] Add confirmation dialogs for CRM writes
@@ -581,6 +655,7 @@ socket.io-client or native WebSocket
 **Milestone**: Lead discovery flow works end-to-end
 
 ### Phase 3: Polish & Demo Prep (Hours 24-40)
+
 - [ ] Add error handling and retries
 - [ ] Implement hardcoded fallback data
 - [ ] Add loading states and animations
@@ -591,6 +666,7 @@ socket.io-client or native WebSocket
 **Milestone**: Demo-ready system
 
 ### Phase 4: Final Polish (Hours 40-48)
+
 - [ ] Record demo video
 - [ ] Create README with setup instructions
 - [ ] Prepare presentation deck
@@ -602,18 +678,22 @@ socket.io-client or native WebSocket
 ## Deliverables
 
 ### Required for Submission
+
 1. **Working Web App**
+
    - Frontend accessible at `localhost:3000`
    - Backend running at `localhost:8000`
    - Lead discovery flow functional
 
 2. **Demo Video (3-5 minutes)**
+
    - Show lead discovery flow
    - Show email drafting
    - Highlight agent orchestration
    - Explain time savings
 
 3. **Documentation**
+
    - README with setup instructions
    - Demo script for judges
    - Architecture diagram (simple)
@@ -638,18 +718,20 @@ socket.io-client or native WebSocket
 ## Success Definition
 
 **Minimum Viable Demo:**
+
 - User inputs "Research Stripe and assess ICP fit"
 - Web Search Agent finds Stripe data
 - Notion Agent gets ICP criteria
 - System scores fit (shows "poor fit - too large")
-- User can confirm to add to CRM anyway
-- CRM Agent creates record
+  - User can confirm to add to HubSpot CRM anyway
+  - HubSpot CRM Agent creates record
 - Total time: < 2 minutes
 
 **Stretch Goals:**
+
 - Email drafting works
 - Pre-meeting brief works
-- 3+ companies pre-loaded in CRM for demos
+- 3+ companies pre-loaded in HubSpot CRM for demos
 - Beautiful UI that impresses judges
 
 ## Next Immediate Steps
