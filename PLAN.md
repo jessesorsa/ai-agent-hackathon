@@ -21,3 +21,22 @@
 - General
     - Chat UI for agents is very restricting (wall of text)
     - All applications use static complicated UIs which are annoying and super time consuming to use
+
+
+
+## Idea
+CRM agent
+- Update company, deal and contact info
+- Input new company, deal and contacts
+- Search for specific objects and their info
+- Adding and retrieving notes about a specific customer
+Gmail agent
+- Drafts emails
+Notion agent
+- Fetch ICP document
+Web search agent
+- Searches company info from the web
+(Meeting)
+- Joins meetings
+- Transcribes meetings
+- Saves them to CRM
