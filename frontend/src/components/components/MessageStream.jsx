@@ -2,21 +2,22 @@
 
 import { useEffect, useRef } from 'react'
 import Message from './Message';
+import { Loader2 } from 'lucide-react';
 
 /**
  * MessageStream component that displays a list of messages
  * @param {Object} props
  * @param {Array} props.messages - Array of message objects with { role, content }
  */
-const MessageStream = ({ messages = [] }) => {
+const MessageStream = ({ messages = [], isLoading = false }) => {
     const messagesEndRef = useRef(null);
 
     // Auto-scroll to bottom when new messages are added
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+    }, [messages, isLoading]);
 
-    if (messages.length === 0) {
+    if (messages.length === 0 && !isLoading) {
         return (
             <div className="flex-1 flex items-center justify-center px-4">
                 <p className="text-4xl font-semibold">
@@ -36,6 +37,14 @@ const MessageStream = ({ messages = [] }) => {
                         content={message.content}
                     />
                 ))}
+                {isLoading && (
+                    <div className="flex justify-start w-full">
+                        <div className="flex items-center gap-2 p-3 text-sm text-neutral-500">
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span>Processing...</span>
+                        </div>
+                    </div>
+                )}
                 <div ref={messagesEndRef} />
             </div>
         </div>
