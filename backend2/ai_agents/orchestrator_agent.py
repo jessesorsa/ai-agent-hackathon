@@ -12,26 +12,42 @@ load_dotenv()
 @function_tool
 async def call_hubspot_tool(prompt: str) -> str:
     """
-    Tool to call the HubSpot agent.
+    Call the HubSpot CRM agent to handle CRM-related operations.
+    
+    Use this tool for:
+    - Searching for companies, deals, or contacts in HubSpot
+    - Creating new companies, deals, or contacts
+    - Updating existing CRM records (deals, contacts, companies)
+    - Retrieving information about specific CRM entities
     
     Args:
-        prompt: Text prompt to send to the HubSpot agent
+        prompt: A natural language request describing the CRM operation you want to perform.
+               Examples: "Search for companies named Acme", "Create a new deal for $50k",
+               "Find contacts in the tech industry", "Update deal status to closed-won"
     
     Returns:
-        str: Response from HubSpot agent
+        str: The response from the HubSpot agent containing the results of the CRM operation
     """
     return await call_hubspot_agent(prompt)
 
 @function_tool
 async def call_gmail_tool(prompt: str) -> str:
     """
-    Tool to call the Gmail agent.
+    Call the Gmail agent to handle email-related operations.
+    
+    Use this tool for:
+    - Drafting new emails based on user requests
+    - Sending emails to recipients
+    - Fetching/searching for emails in Gmail
+    - Managing email drafts
     
     Args:
-        prompt: Text prompt to send to the Gmail agent
+        prompt: A natural language request describing the email operation you want to perform.
+               Examples: "Draft an email to john@example.com about the meeting",
+               "Send a follow-up email to the client", "Find emails from last week"
     
     Returns:
-        str: Response from Gmail agent
+        str: The response from the Gmail agent containing the email draft, confirmation, or search results
     """
     return await call_gmail_agent(prompt)
 
@@ -67,7 +83,7 @@ async def call_orchestrator_agent(prompt: str) -> str:
     
     Args:
         prompt: User's request/prompt
-    
+    s
     Returns:
         str: Response from orchestrator agent
     """
@@ -83,7 +99,7 @@ async def call_orchestrator_agent(prompt: str) -> str:
         - Use call_calendar_tool for all calendar-related requests (creating events, modifying events, finding events, listing events, deleting events)
         - You can use multiple tools if needed to fulfill a request.""",
         tools=tools,
-        model="gpt-4.1-mini"
+        model="gpt-4o-mini"
     )
 
     result = await Runner.run(

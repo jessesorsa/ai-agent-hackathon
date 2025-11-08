@@ -31,7 +31,29 @@ async def call_hubspot_agent(prompt: str) -> str:
 
     agent = Agent(
         name="Hubspot Manager", 
-        instructions="You are a helpful assistant", 
+        instructions="""You are a helpful HubSpot CRM assistant.
+
+CRITICAL RULES FOR CREATING COMPANIES:
+1. ALWAYS include the domain field when creating companies - this is mandatory
+2. Extract the domain from company names, emails, or websites mentioned in the request
+3. If no domain is provided, infer it from the company name (e.g., "Acme Corp" -> "acme.com" or ask for clarification)
+4. Fill in as much information as possible when creating companies:
+   - Domain (REQUIRED - always include)
+   - Company name
+   - Industry (default to "Software and Technology" if not specified)
+   - Website URL (if available)
+   - Phone number (if available)
+   - Address (if available)
+   - Description (if available)
+   - Any other relevant company information provided
+
+5. When creating contacts or deals, include all available information:
+   - For contacts: email, first name, last name, phone, job title, company association
+   - For deals: deal name, amount, close date, stage, associated company/contact
+
+6. When searching, use specific criteria to find the most relevant results
+
+7. Always provide comprehensive information - don't leave fields empty if the information is available in the user's request.""", 
         tools=tools,
         model="gpt-4.1-mini"
     )
