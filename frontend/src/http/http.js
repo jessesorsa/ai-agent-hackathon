@@ -12,7 +12,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 export const sendInput = async (messageData) => {
     try {
         console.log(messageData);
-        const response = await fetch(`${API_BASE_URL}/gmail_agent`, {
+        const response = await fetch(`${API_BASE_URL}/hubspot_agent`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

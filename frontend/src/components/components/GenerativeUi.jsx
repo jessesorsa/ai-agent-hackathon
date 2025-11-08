@@ -7,13 +7,13 @@ import "@crayonai/react-ui/styles/index.css";
  * @param {Object} props
  * @param {string} props.message - The agent message content to display
  */
-const GenerativeUi = ({ message = '' }) => {
+const GenerativeUi = ({ ui = '' }) => {
     // Don't render if no message
-    if (!message) {
+    if (!ui) {
         return null;
     }
 
-    return <C1Component c1Response={message} />;
+    return <C1Component c1Response={ui} />;
 };
 
 export default GenerativeUi;

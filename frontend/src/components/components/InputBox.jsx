@@ -16,7 +16,7 @@ import { sendInput, test } from '@/http/http'
  * @param {Function} props.onMessageSent - Callback function called when a message is sent
  * @param {Function} props.onResponseReceived - Callback function called when a response is received
  */
-const InputBox = ({ onMessageSent, onResponseReceived }) => {
+const InputBox = ({ onMessageSent, onResponseReceived, setUi }) => {
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
@@ -38,6 +38,9 @@ const InputBox = ({ onMessageSent, onResponseReceived }) => {
             const response = await sendInput(input);
             console.log('Response from backend:', response);
 
+            setUi(response.ui)
+
+            /*
             // Handle the response
             if (onResponseReceived) {
                 // If response has a direct content/answer field
@@ -48,6 +51,9 @@ const InputBox = ({ onMessageSent, onResponseReceived }) => {
                     });
                 }
             }
+            */
+
+
         } catch (error) {
             console.error('Failed to send message:', error);
             // Optionally add error message to stream
