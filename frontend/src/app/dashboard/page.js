@@ -29,6 +29,7 @@ export default function Dashboard() {
                 onResponseReceived={handleResponseReceived}
                 setUi={setUi}
                 setIsLoading={setIsLoading}
+                messages={messages}
             />
         </div>
     );

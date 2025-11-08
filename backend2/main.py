@@ -56,8 +56,23 @@ async def ui_agent(request: Request):
 @app.post("/orchestrator_agent")
 async def orchestrator_agent(request: Request):
     body = await request.json()
+    print(f"[Orchestrator Agent] Received body: {body}")
+    
+    # Extract message and context
     message = body.get("message", "")
-    print(f"[Orchestrator Agent] Received message: {message}")
-    response = await call_orchestrator_agent(message)
+    context = body.get("context", [])
+    
+    # Format message with context if context exists
+    if context and len(context) > 0:
+        # Format context messages as conversation history
+        context_string = "\n".join([
+            f"{'User' if msg.get('role') == 'user' else 'Assistant'}: {msg.get('content', '')}"
+            for msg in context
+        ])
+        formatted_message = f"{context_string}\n\nUser: {message}"
+    else:
+        formatted_message = message
+    
+    response = await call_orchestrator_agent(formatted_message)
     print(f"[Orchestrator Agent] Response: {response}")
     return {"message": response}
