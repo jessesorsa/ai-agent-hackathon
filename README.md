@@ -10,7 +10,7 @@ Capybara AI simplifies your sales workflow by providing a conversational AI assi
 - Manage calendar events
 - Send Slack messages
 - Search the web and manage Notion pages
-- Display information in beautiful, interactive components
+- Display information in generative components
 
 All through a simple chat interface powered by AI agents.
 
@@ -47,7 +47,7 @@ All through a simple chat interface powered by AI agents.
 ### Backend
 - **Framework**: FastAPI
 - **AI Agents**: OpenAI Agents SDK with Composio integration
-- **LLM**: GPT-4o-mini
+- **LLM**: GPT-4.1-mini
 - **Integrations**: 
   - HubSpot (via Composio)
   - Gmail (via Composio)
