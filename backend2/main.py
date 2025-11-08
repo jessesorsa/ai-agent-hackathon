@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from ai_agents.hubspot_agent import call_hubspot_agent
 from ai_agents.ui_agent import call_ui_agent
 from ai_agents.gmail_agent import call_gmail_agent
+from ai_agents.orchestrator_agent import call_orchestrator_agent
 from dotenv import load_dotenv
 import os
 import json
@@ -50,4 +51,13 @@ async def ui_agent(request: Request):
     print(f"Received message: {message}")
     response = await call_ui_agent(message)
     print(f"Response: {response}")
+    return {"message": response}
+
+@app.post("/orchestrator_agent")
+async def orchestrator_agent(request: Request):
+    body = await request.json()
+    message = body.get("message", "")
+    print(f"[Orchestrator Agent] Received message: {message}")
+    response = await call_orchestrator_agent(message)
+    print(f"[Orchestrator Agent] Response: {response}")
     return {"message": response}

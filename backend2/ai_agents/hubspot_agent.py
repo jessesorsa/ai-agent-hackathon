@@ -33,7 +33,7 @@ async def call_hubspot_agent(prompt: str) -> str:
         name="Hubspot Manager", 
         instructions="You are a helpful assistant", 
         tools=tools,
-        model="gpt-4.1"
+        model="gpt-4.1-mini"
     )
 
     result = await Runner.run(
