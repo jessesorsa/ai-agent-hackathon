@@ -1,3 +1,4 @@
+import os
 from dotenv import load_dotenv
 
 from composio import Composio
@@ -7,7 +8,7 @@ from composio_openai_agents import OpenAIAgentsProvider
 # Load environment variables
 load_dotenv()
 
-composio = Composio(api_key="ak_GejSN5EyYHRkudj6yqaI", provider=OpenAIAgentsProvider())
+composio = Composio(api_key=os.getenv("COMPOSIO_API_KEY"), provider=OpenAIAgentsProvider())
 
  
 async def call_hubspot_agent(prompt: str) -> str:
