@@ -1,4 +1,5 @@
 # Python cache
+./ai-hackathon
 __pycache__/
 *.pyc
 *.pyo
