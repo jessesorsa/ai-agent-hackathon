@@ -22,7 +22,8 @@ async def call_gmail_agent(prompt: str) -> str:
         str: Response from Gmail agent with drafted email
     """
     # Get Gmail tools that are pre-configured
-    externalUserId = os.getenv("GMAIL_USER_ID")
+    ##externalUserId = os.getenv("GMAIL_USER_ID")
+    externalUserId = "pg-test-4f18136c-0f65-411d-aad7-18562895eb21"
     tools = composio.tools.get(
         user_id=externalUserId, 
         tools=["GMAIL_CREATE_EMAIL_DRAFT", "GMAIL_SEND_EMAIL", "GMAIL_FETCH_EMAILS"]
