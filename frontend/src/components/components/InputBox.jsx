@@ -16,12 +16,10 @@ import { sendInput, test } from '@/http/http'
  * @param {Function} props.onMessageSent - Callback function called when a message is sent
  * @param {Function} props.onResponseReceived - Callback function called when a response is received
  */
-const InputBox = ({ onMessageSent, onResponseReceived, setUi }) => {
+const InputBox = ({ onMessageSent, onResponseReceived, setUi, setIsLoading }) => {
     const [input, setInput] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
 
     const sendMessage = async () => {
-        if (!input.trim() || isLoading) return;
 
         setInput("");
         setIsLoading(true);
@@ -84,7 +82,6 @@ const InputBox = ({ onMessageSent, onResponseReceived, setUi }) => {
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={handleKeyDown}
-                            disabled={isLoading}
                         />
                         <Button
                             size="icon"

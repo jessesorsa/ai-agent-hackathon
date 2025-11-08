@@ -7,6 +7,7 @@ import MessageStream from "@/components/components/MessageStream";
 
 export default function Dashboard() {
     const [messages, setMessages] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const [ui, setUi] = useState({});
 
     const handleMessageSent = (message) => {
@@ -20,13 +21,14 @@ export default function Dashboard() {
     return (
         <div className="flex flex-col min-h-screen bg-background">
             <div className="flex-1 overflow-hidden flex pb-32">
-                <MessageStream messages={messages} />
+                <MessageStream messages={messages} isLoading={isLoading} />
                 {/*<GenerativeUi ui={ui} />*/}
             </div>
             <InputBox
                 onMessageSent={handleMessageSent}
                 onResponseReceived={handleResponseReceived}
                 setUi={setUi}
+                setIsLoading={setIsLoading}
             />
         </div>
     );
