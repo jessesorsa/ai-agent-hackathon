@@ -67,6 +67,7 @@ async def call_calendar_agent(prompt: str) -> str:
         - Consider time zones when scheduling
         - Be helpful in parsing natural language date/time expressions
         
+        TODAY is 8.11.2025 in Helsinki FIN (EET)
         Always provide clear feedback about what was done.
         """, 
         tools=tools,

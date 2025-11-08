@@ -9,9 +9,9 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
  * @param {string|Array} messageData - The message or array of messages to send
  * @returns {Promise<Object>} The response from the backend
  */
-export const sendInput = async (messageData) => {
+export const sendInput = async (messageData, contextMessages = []) => {
     try {
-        console.log(messageData);
+        console.log(messageData, contextMessages);
         const response = await fetch(`${API_BASE_URL}/orchestrator_agent`, {
             method: 'POST',
             headers: {
@@ -19,6 +19,7 @@ export const sendInput = async (messageData) => {
             },
             body: JSON.stringify({
                 message: messageData,
+                context: contextMessages, // Last 3 messages as context
             }),
         });
 

@@ -15,12 +15,15 @@ import { sendInput, test } from '@/http/http'
  * @param {Object} props
  * @param {Function} props.onMessageSent - Callback function called when a message is sent
  * @param {Function} props.onResponseReceived - Callback function called when a response is received
+ * @param {Array} props.messages - Array of previous messages for context
  */
-const InputBox = ({ onMessageSent, onResponseReceived, setUi, setIsLoading }) => {
+const InputBox = ({ onMessageSent, onResponseReceived, setUi, setIsLoading, messages = [] }) => {
     const [input, setInput] = useState("");
 
     const sendMessage = async () => {
+        if (!input.trim()) return;
 
+        const currentInput = input;
         setInput("");
         setIsLoading(true);
 
@@ -28,27 +31,48 @@ const InputBox = ({ onMessageSent, onResponseReceived, setUi, setIsLoading }) =>
         if (onMessageSent) {
             onMessageSent({
                 role: 'user',
-                content: input
+                content: currentInput
             });
         }
 
         try {
-            const response = await sendInput(input);
-            console.log('Response from backend:', response);
+            // Get last 3 messages for context
+            const last3Messages = messages.slice(-3);
 
-            setUi(response.ui)
+            // Send current input with context messages
+            const response = await sendInput(currentInput, last3Messages);
+            console.log('Response from backend:', response);
 
             // Handle the response
             if (onResponseReceived) {
-                // If response has a direct content/answer field
-                if (response.content || response.answer) {
+                // Try to parse content as JSON if it's a string
+                let parsedResponse = response;
+
+                if (response.content && typeof response.content === 'string') {
+                    try {
+                        // Try to parse the content as JSON
+                        const parsedContent = JSON.parse(response.content);
+                        // If parsed content has a role, use it
+                        if (parsedContent.role) {
+                            parsedResponse = parsedContent;
+                        }
+                    } catch (e) {
+                        // Not valid JSON, continue with original response
+                    }
+                }
+
+                // If response already has a role (either from parsing or original), use it directly
+                if (parsedResponse.role) {
+                    onResponseReceived(parsedResponse);
+                }
+                // Otherwise, default to agent role with content/answer
+                else if (response.content || response.answer) {
                     onResponseReceived({
                         role: 'agent',
                         content: response.content || response.answer
                     });
                 }
             }
-
 
         } catch (error) {
             console.error('Failed to send message:', error);

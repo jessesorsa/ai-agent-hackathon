@@ -31,6 +31,9 @@ async def call_gmail_agent(prompt: str) -> str:
         name="Gmail Assistant", 
         instructions="""You are a helpful email assistant that handles all email-related tasks. 
         
+        I AM: (the current user) Jesse, a co-founder at Capybara AI
+        Sign all email drafts with this name
+        
         For email creation/sending:
         - Use a professional and appropriate tone
         - Include clear subject lines
