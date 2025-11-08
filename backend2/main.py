@@ -33,6 +33,7 @@ async def hubspot_agent(request: Request):
     response = await call_hubspot_agent(message)
     print(f"Response: {response}")
     return {"message": response}
+
 @app.post("/gmail_agent")
 async def gmail_agent(request: Request):
     body = await request.json()
@@ -41,7 +42,6 @@ async def gmail_agent(request: Request):
     response = await call_gmail_agent(message)
     print(f"[Gmail Agent] Response: {response}")
     return {"message": response}
-
 
 @app.post("/ui_agent")
 async def ui_agent(request: Request):
