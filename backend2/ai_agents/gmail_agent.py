@@ -13,32 +13,46 @@ composio = Composio(api_key=os.getenv("COMPOSIO_API_KEY"), provider=OpenAIAgents
  
 async def call_gmail_agent(prompt: str) -> str:
     """
-    Call Gmail agent to draft emails based on user prompts.
+    Call Gmail agent to process email-related requests.
     
     Args:
-        prompt: User's request/prompt for email drafting
+        prompt: User's request/prompt
     
     Returns:
-        str: Response from Gmail agent with drafted email
+        str: Response from Gmail agent
     """
-    # Get Gmail tools that are pre-configured
-    ##externalUserId = os.getenv("GMAIL_USER_ID")
     externalUserId = "pg-test-4f18136c-0f65-411d-aad7-18562895eb21"
     tools = composio.tools.get(
         user_id=externalUserId, 
-        tools=["GMAIL_CREATE_EMAIL_DRAFT", "GMAIL_SEND_EMAIL", "GMAIL_FETCH_EMAILS"]
+        tools=["GMAIL_CREATE_EMAIL_DRAFT", "GMAIL_SEND_EMAIL", "GMAIL_FETCH_EMAILS", "GMAIL_SEARCH_EMAILS"]
     )
 
     agent = Agent(
         name="Gmail Assistant", 
-        instructions="""You are a helpful email assistant that drafts professional emails based on user requests. 
-        When drafting emails:
+        instructions="""You are a helpful email assistant that handles all email-related tasks. 
+        
+        For email creation/sending:
         - Use a professional and appropriate tone
         - Include clear subject lines
         - Format the email properly with greetings and sign-offs
-        - Ask for clarification if needed (recipient, subject, specific details)
+        - If the user explicitly asks to "send" an email, use GMAIL_SEND_EMAIL to send it immediately
+        - If the user asks to "draft" an email or doesn't specify, use GMAIL_CREATE_EMAIL_DRAFT to create a draft
+        - When in doubt, create a draft for safety
+        
+        For email searching/summarizing:
+        - Search and fetch emails related to the user's query
+        - Analyze the content of the fetched emails
+        - Provide a clear and concise summary including:
+          * Number of relevant emails found
+          * Key senders and recipients
+          * Main topics or themes discussed
+          * Important dates or deadlines mentioned
+          * Any action items or follow-ups needed
+        
+        Always confirm the action taken to the user.
         """, 
-        tools=tools
+        tools=tools,
+        model="gpt-4.1-mini"
     )
 
     result = await Runner.run(
