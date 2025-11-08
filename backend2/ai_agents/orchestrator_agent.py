@@ -12,19 +12,6 @@ load_dotenv()
 @function_tool
 async def call_hubspot_tool(prompt: str) -> str:
     """
-    Tool to call the HubSpot agent.
-    
-    Args:
-        prompt: Text prompt to send to the HubSpot agent
-    
-    Returns:
-        str: Response from HubSpot agent
-    """
-    return await call_hubspot_agent(prompt)
-
-@function_tool
-async def call_hubspot_tool(prompt: str) -> str:
-    """
     Call the HubSpot CRM agent to handle CRM-related operations.
     
     Use this tool for:
