@@ -40,7 +40,6 @@ const InputBox = ({ onMessageSent, onResponseReceived, setUi }) => {
 
             setUi(response.ui)
 
-            /*
             // Handle the response
             if (onResponseReceived) {
                 // If response has a direct content/answer field
@@ -51,7 +50,6 @@ const InputBox = ({ onMessageSent, onResponseReceived, setUi }) => {
                     });
                 }
             }
-            */
 
 
         } catch (error) {

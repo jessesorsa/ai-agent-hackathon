@@ -24,10 +24,16 @@ async def call_hubspot_agent(prompt: str) -> str:
     """
     # Get Gmail tools that are pre-configured
     externalUserId = "pg-test-5ebc0c28-44d2-4653-a6eb-5dc8942828e9"
-    tools = composio.tools.get(user_id=externalUserId, tools=["HUBSPOT_SEARCH_COMPANIES", "HUBSPOT_GET_COMPANY"])
+    tools = composio.tools.get(user_id=externalUserId, 
+        tools=["HUBSPOT_SEARCH_COMPANIES", "HUBSPOT_SEARCH_DEALS", "HUBSPOT_SEARCH_CONTACTS_BY_CRITERIA", 
+               "HUBSPOT_GET_COMPANY", "HUBSPOT_CREATE_COMPANY", 
+               "HUBSPOT_CREATE_DEAL", "HUBSPOT_CREATE_CONTACT", "HUBSPOT_UPDATE_DEAL"])
 
     agent = Agent(
-        name="Hubspot Manager", instructions="You are a helpful assistant", tools=tools
+        name="Hubspot Manager", 
+        instructions="You are a helpful assistant", 
+        tools=tools,
+        model="gpt-4.1"
     )
 
     result = await Runner.run(
