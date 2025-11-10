@@ -96,7 +96,7 @@ AI-agent-hackathon/
 
 1. Navigate to backend directory:
 ```bash
-cd backend2
+cd backend
 ```
 
 2. Create virtual environment:
@@ -107,16 +107,18 @@ source ai-hackathon/bin/activate  # On Windows: ai-hackathon\Scripts\activate
 
 3. Install dependencies:
 ```bash
+# Install directly with pip
 pip install fastapi uvicorn[standard] python-dotenv openai composio composio-openai-agents openai-agents
+
+# Or install from requirements.txt
+pip install -r requirements.txt
 ```
 
-4. Create `.env` file:
-```env
-OPENAI_API_KEY=your_openai_key
-COMPOSIO_API_KEY=your_composio_key
-THESYS_API_KEY=your_thesys_key
-GMAIL_USER_ID=your_gmail_user_id
+4. Create `.env` from the example:
+```bash
+cp .env.example .env
 ```
+Then open `.env` and fill in your API keys and IDs (e.g. OPENAI_API_KEY, COMPOSIO_API_KEY, THESYS_API_KEY, GMAIL_USER_ID).
 
 5. Run the server:
 ```bash
@@ -183,11 +185,3 @@ The frontend will be available at `http://localhost:3000`
 - OpenAI Agents SDK
 - Composio SDK
 - Python 3.12
-
-## License
-
-[Your License Here]
-
-## Contributing
-
-[Contributing Guidelines]

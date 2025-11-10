@@ -1,0 +1,7 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+openai
+composio
+composio-openai-agents
+openai-agents

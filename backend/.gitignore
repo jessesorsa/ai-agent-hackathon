@@ -1,13 +1,10 @@
-# Python cache
+./ai-hackathon
+ai-hackathon/
 __pycache__/
 *.pyc
 *.pyo
-
-# Environment variables
 .env
 .env.local
-
-# IDE
 .vscode/
 .idea/
 .DS_Store
