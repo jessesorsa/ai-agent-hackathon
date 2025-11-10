@@ -70,7 +70,7 @@ AI-agent-hackathon/
 │   │   └── http/            # API client
 │   └── package.json
 │
-└── backend2/                # FastAPI backend
+└── backend/                # FastAPI backend
     ├── ai_agents/           # Agent implementations
     │   ├── orchestrator_agent.py
     │   ├── hubspot_agent.py
